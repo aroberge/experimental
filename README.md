@@ -11,9 +11,9 @@ Hello world!
 
 # What is `experimental`?
 
-`experimental` is a simple Python module intended to facilitate exploring different syntax construct in Python in an easy way.  Unless you have a very compelling reason to do so, it should not be used in production. The
+`experimental` is a simple Python module intended to facilitate exploring different syntax construct in Python in an easy way.  Unless you have a very compelling reason to do so, it should not be used in production.
 
-If you want to modify Python's syntax, say by adding a new keyword, you need to:
+Without `experimental`, if you want to modify Python's syntax, say by adding a new keyword, you need to:
 
 1. Get a copy of Python's repository on your computer
 2. modify the grammar file
@@ -43,13 +43,17 @@ If you simply want to have start a experimental Python console, as shown at the 
 
 ### Automatically processing a file - 1
 
-Simply add the name of the test file (without the .py extension) at the end.
+Suppose you have the following file:
 
 ```python
 > type test.py
 from __experimental__ import print_keyword
 print "Hello world!"
+```
 
+Simply add the name of the test file (without the .py extension) at the end.
+
+```
 > python -m experimental test
 Hello world!
 ```

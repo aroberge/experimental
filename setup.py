@@ -8,7 +8,7 @@ def convert_md(filename):
 
 
 setup(name='experimental',
-    version='0.9',
+    version='0.9.2',
     description="Enables easy modification of Python's syntax on the fly.",
     long_description = convert_md('README.md'),
     classifiers=[

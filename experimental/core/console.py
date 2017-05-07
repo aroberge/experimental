@@ -1,9 +1,14 @@
-#pylint: disable=W0102
+#pylint: disable=W0102, C0103
 import code
 import platform
 import sys
 
 from . import transforms
+
+# define banner and prompt here so that they can be imported in tests
+banner = "experimental console. [Python version: %s]\n" % platform.python_version()
+prompt = "~~> "
+
 
 class ExperimentalInteractiveConsole(code.InteractiveConsole):
     '''A Python console that emulates the normal Python interpreter
@@ -23,7 +28,7 @@ class ExperimentalInteractiveConsole(code.InteractiveConsole):
         with in some way (this is the same as runsource()).
 
         """
-        if transforms.FROM_experimental.match(line):
+        if transforms.FROM_EXPERIMENTAL.match(line):
             transforms.add_transformers(line)
             self.buffer.append("\n")
         else:
@@ -51,7 +56,6 @@ class ExperimentalInteractiveConsole(code.InteractiveConsole):
 
 def start_console(local_vars={}):
     '''Starts a console; modified from code.interact'''
-    sys.ps1 = "~~> "
-    banner = "experimental console. [Python version: %s]\n" % platform.python_version()
+    sys.ps1 = prompt
     console = ExperimentalInteractiveConsole(locals=local_vars)
     console.interact(banner=banner)
