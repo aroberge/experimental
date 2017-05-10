@@ -103,7 +103,7 @@ See [the readme file in the transformers directory](https://github.com/aroberge/
 See [the readme file in the tests directory](https://github.com/aroberge/experimental/blob/master/tests/readme.md).
 
 
-<span style="color:red; font-weight:bold">More to come...</span>
+:exclamation: **More to come...**
 
 
 ## To do

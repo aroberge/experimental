@@ -182,8 +182,7 @@ block that would be ignored by Python. The idea was to use this as
 a _pythonic_ notation as an alternative for the optional type hinting described
 in PEP484.  **This idea has been rejected.**
 
-<span style="color:red; font-weight:bold">Warning:</span>
-This transformation **cannot** be used in the console.
+:Warning: This transformation **cannot** be used in the console.
 
 For more details, please see two of my recent blog posts:
 
