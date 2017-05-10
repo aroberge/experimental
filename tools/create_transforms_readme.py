@@ -12,13 +12,15 @@ os.chdir(target_dir)
 sys.path.insert(0, target_dir)
 
 docstrings = ['''
-The content of this readme has been automatically extracted from
+Most of the content of this readme has been automatically extracted from
 the docstring of each file found in this directory.
 
 Note that multiple transforms can be used in a single file, e.g.
 
-    from __experimental__ import increment, decrement
-    from __experimental__ import function_keyword
+```python
+from __experimental__ import increment, decrement
+from __experimental__ import function_keyword
+```
 ''']
 
 for f in os.listdir('.'):

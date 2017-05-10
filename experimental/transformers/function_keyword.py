@@ -5,6 +5,11 @@ enables to use the word `function` instead of `lambda`, as in
     square = function x: x**2
 
     square(3)  # returns 9
+
+`lambda` can still be used in the source code.
+
+The transformation is done using the tokenize module; it should
+only affect code and not content of strings.
 '''
 
 from utils.one2one import translate

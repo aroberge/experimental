@@ -92,9 +92,18 @@ experimental console. [Python version: 3.5.2]
 3
 ```
 
-_Note that there are two more **readme** files, one in the tests directory and the other in the experimental.transformers directory._
+## Additional information
 
-**More to come**
+### Available transformations
+
+See [the readme file in the transformers directory](https://github.com/aroberge/experimental/blob/master/experimental/transformers/readme.md).
+
+### Automated tests
+
+See [the readme file in the tests directory](https://github.com/aroberge/experimental/blob/master/tests/readme.md).
+
+
+<span style="color:red; font-weight:bold">More to come...</span>
 
 
 ## To do
@@ -111,5 +120,4 @@ _Note that there are two more **readme** files, one in the tests directory and t
 
 - [ ] Add version based on imp for older Python versions.
 
-- [ ] Need to create automated tests for the console (perhaps use something like
-      http://stackoverflow.com/a/15874291/558799 or http://stackoverflow.com/a/30039941/558799)
+- [x] Need to create automated tests for the console

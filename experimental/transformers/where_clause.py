@@ -3,9 +3,10 @@
 shows how one could use `where` as a keyword to introduce a code
 block that would be ignored by Python. The idea was to use this as
 a _pythonic_ notation as an alternative for the optional type hinting described
-in PEP484.  **This idea has been rejected; it is included just for fun.**
+in PEP484.  **This idea has been rejected.**
 
-Note that this transformation **cannot** be used in the console.
+<span style="color:red; font-weight:bold">Warning:</span>
+This transformation **cannot** be used in the console.
 
 For more details, please see two of my recent blog posts:
 

@@ -4,14 +4,17 @@
 enables transformation of code of the form
 
     name ++  # optional comment
+    other++
 
 into
 
     name += 1  # optional comment
+    other+= 1
 
 Space(s) betwen `name` and `++` are ignored.
 
-This can change not only code but content of triple quoted strings
+This change is done as a simple string replacement, on a line by line basis.
+Therefore, it can change not only code but content of triple quoted strings
 as well. A more robust solution could always be implemented
 using the tokenize module.
 '''

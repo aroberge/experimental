@@ -17,6 +17,9 @@ is equivalent to
 
 The names of the variables are chosen so as to ensure that they
 do not appear in the source code to be translated.
+
+The transformation is done using the tokenize module; it should
+only affect code and not content of strings.
 '''
 
 from io import StringIO

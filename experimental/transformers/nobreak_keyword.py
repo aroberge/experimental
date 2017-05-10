@@ -8,7 +8,10 @@ enables to use the fake keyword `nobreak` instead of `else`, as in
         print("The entire loop was run.")
 
 Note that `nobreak` can be use everywhere `else` could be used,
-even if it does not make sense.
+(including in `if` blocks) even if would not make sense.
+
+The transformation is done using the tokenize module; it should
+only affect code and not content of strings.
 '''
 
 from utils.one2one import translate
