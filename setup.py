@@ -1,14 +1,19 @@
 #pylint: skip-file
 from setuptools import setup, find_packages
+from distutils.util import convert_path
 
-
+## converting readme for pypi
 from pypandoc import convert
 def convert_md(filename):
     return convert(filename, 'rst')
 
+version_path = convert_path('experimental/version.py')
+with open(version_path) as version_file:
+    exec(version_file.read())
+
 
 setup(name='experimental',
-    version='0.9.2',
+    version=__version__,
     description="Enables easy modification of Python's syntax on the fly.",
     long_description = convert_md('README.md'),
     classifiers=[

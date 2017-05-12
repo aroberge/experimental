@@ -5,8 +5,11 @@ import sys
 
 from . import transforms
 
+from .. import version
+
 # define banner and prompt here so that they can be imported in tests
-banner = "experimental console. [Python version: %s]\n" % platform.python_version()
+banner = "experimental console version {}. [Python version: {}]\n".format(
+            version.__version__, platform.python_version())
 prompt = "~~> "
 
 

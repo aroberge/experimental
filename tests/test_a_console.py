@@ -60,7 +60,7 @@ def test_console():
             universal_newlines=True  # use strings as input
         )
         stdout, stderr = process.communicate(inp)
-        _ = process.wait()
+        process.wait()
         assert stderr.strip() == banner.strip()
         assert compare_output(stdout, out)
 

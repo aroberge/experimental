@@ -1,3 +1,8 @@
+# Important
+
+When running all the tests using pytest, the console test must run first; 
+since pytest runs tests in alphabetical order, this is why it is named test_a_console.py
+
 # About these tests
 
 For simplicity, wherever possible, I follow [pytest](https://docs.pytest.org/en/latest/contents.html)'s strategy of simply using Python's `assert` statements and naming test files and test functions within these files all starting with `test_` for easy discovery. `pytest` is not part of Python's standard library and you may have to intall it. (If you use the Python Anaconda distribution from Continuum Analytics, it is likely already included.)
