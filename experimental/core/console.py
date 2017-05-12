@@ -13,6 +13,20 @@ banner = "experimental console version {}. [Python version: {}]\n".format(
 prompt = "~~> "
 
 
+def __experimental_range(start, stop, var, cond, loc={}):
+    locals().update(loc)
+    if start < stop:
+        for __ in range(start, stop):
+            locals()[var] = __
+            if eval(cond, globals(), locals()):
+                yield __
+    else:
+        for __ in range(start, stop, -1):
+            locals()[var] = __
+            if eval(cond, globals(), locals()):
+                yield __        
+
+
 class ExperimentalInteractiveConsole(code.InteractiveConsole):
     '''A Python console that emulates the normal Python interpreter
        except that it support experimental code transformations.'''
@@ -45,7 +59,9 @@ class ExperimentalInteractiveConsole(code.InteractiveConsole):
             source += "pass"
         source = transforms.transform(source)
         if add_pass:
-            source = source.rstrip(' ')[:-4]
+            source = source.rstrip(' ')
+            if source.endswith("pass"):
+                source = source[:-4]
 
         # some transformations may strip an empty line meant to end a block
         if not self.buffer[-1]:
@@ -57,7 +73,7 @@ class ExperimentalInteractiveConsole(code.InteractiveConsole):
         return more
 
 
-def start_console(local_vars={}):
+def start_console(local_vars={"__experimental_range":__experimental_range}):
     '''Starts a console; modified from code.interact'''
     sys.ps1 = prompt
     console = ExperimentalInteractiveConsole(locals=local_vars)

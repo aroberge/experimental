@@ -108,6 +108,7 @@ def transform(source):
                 failed[name] = tr_module
                 # print("Unexpected exception in transforms.transform",
                 #       e.__class__.__name__)
+                # traceback.print_exc()
 
         if not failed:
             break
