@@ -43,26 +43,37 @@ import re
 no_condition = r"""(?P<indented_for>\s*for\s+)
                       (?P<var>[a-zA-Z_]\w*)  
                       \s+ in \s+               
-                      (?P<start>\w+)         
+                      (?P<start>[-\w]+)         
                       \s* %s \s*
                       (?P=var)
                       \s* %s \s*
-                      (?P<stop>\w+)
+                      (?P<stop>[-\w]+)
                       \s* : \s*
                       """
 cases = []
 le_lt = re.compile(no_condition % ("<=", "<") , re.VERBOSE)
-cases.append((le_lt, "{} {} in range({}, {}):"))
+cases.append((le_lt, "{0} {1} in range({2}, {3}):"))
 
 le_le = re.compile(no_condition % ("<=", "<=") , re.VERBOSE)
-cases.append((le_le, "{} {} in range({}, {}+1):"))
+cases.append((le_le, "{0} {1} in range({2}, {3}+1):"))
 
 lt_lt = re.compile(no_condition % ("<", "<") , re.VERBOSE)
-cases.append((lt_lt, "{} {} in range({}+1, {}):"))
+cases.append((lt_lt, "{0} {1} in range({2}+1, {3}):"))
 
 lt_le = re.compile(no_condition % ("<", "<=") , re.VERBOSE)
-cases.append((lt_le, "{} {} in range({}+1, {}+1):"))
+cases.append((lt_le, "{0} {1} in range({2}+1, {3}+1):"))
 
+ge_gt = re.compile(no_condition % (">=", ">") , re.VERBOSE)
+cases.append((ge_gt, "{0} {1} in range({2}, {3}, -1):"))
+
+ge_ge = re.compile(no_condition % (">=", ">=") , re.VERBOSE)
+cases.append((ge_ge, "{0} {1} in range({2}, {3}-1, -1):"))
+
+gt_gt = re.compile(no_condition % (">", ">") , re.VERBOSE)
+cases.append((gt_gt, "{0} {1} in range({2}-1, {3}, -1):"))
+
+gt_ge = re.compile(no_condition % (">", ">=") , re.VERBOSE)
+cases.append((gt_ge, "{0} {1} in range({2}-1, {3}-1, -1):"))
 
 def transform_source(source):
     lines = source.split("\n")
