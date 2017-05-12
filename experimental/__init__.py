@@ -25,6 +25,7 @@ import sys
 
 from .core import console, import_hook, transforms
 from .transformers import utils
+from utils.shared import shared_dict
 start_console = console.start_console
 
 if "-m" in sys.argv:
@@ -36,19 +37,11 @@ if "-m" in sys.argv:
         main_module = import_hook.import_main(sys.argv[-1])
 
         if sys.flags.interactive:
-            main_vars = {}
             for var in dir(main_module):
-                if var in ["__builtins__", "__cached__", "__loader__",
+                if var in ["__cached__", "__loader__",
                            "__package__", "__spec__"]:
                     continue
-                main_vars[var] = getattr(main_module, var)
-            start_console(main_vars)
-            # The following is the only way to prevent exiting into
-            # the a "faulty" version of the normal Python console;
-            # [for exemple, the help() is broken]
-            # Executing sys.exit() or the equivalent
-            # raise SystemExit
-            # would not do the trick; however, os_exit does.
-            os._exit(1)
+                shared_dict[var] = getattr(main_module, var)
+            start_console(shared_dict)
     else:
-        start_console()
+        start_console(shared_dict)

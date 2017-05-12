@@ -1,6 +1,7 @@
 #pylint: disable=W0102, C0103
 import code
 import platform
+import os
 import sys
 
 from . import transforms
@@ -10,21 +11,7 @@ from .. import version
 # define banner and prompt here so that they can be imported in tests
 banner = "experimental console version {}. [Python version: {}]\n".format(
             version.__version__, platform.python_version())
-prompt = "~~> "
-
-
-def __experimental_range(start, stop, var, cond, loc={}):
-    locals().update(loc)
-    if start < stop:
-        for __ in range(start, stop):
-            locals()[var] = __
-            if eval(cond, globals(), locals()):
-                yield __
-    else:
-        for __ in range(start, stop, -1):
-            locals()[var] = __
-            if eval(cond, globals(), locals()):
-                yield __        
+prompt = "~~> "   
 
 
 class ExperimentalInteractiveConsole(code.InteractiveConsole):
@@ -66,14 +53,17 @@ class ExperimentalInteractiveConsole(code.InteractiveConsole):
         # some transformations may strip an empty line meant to end a block
         if not self.buffer[-1]:
             source += "\n"
-        more = self.runsource(source, self.filename)
+        try:
+            more = self.runsource(source, self.filename)
+        except SystemExit:
+            os._exit(1)
 
         if not more:
             self.resetbuffer()
         return more
 
 
-def start_console(local_vars={"__experimental_range":__experimental_range}):
+def start_console(local_vars={}):
     '''Starts a console; modified from code.interact'''
     sys.ps1 = prompt
     console = ExperimentalInteractiveConsole(locals=local_vars)

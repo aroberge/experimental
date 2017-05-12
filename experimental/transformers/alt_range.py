@@ -39,6 +39,23 @@ on a single line.
 '''
 
 import re
+from utils.shared import shared_dict
+
+def __experimental_range(start, stop, var, cond, loc={}):
+    locals().update(loc)
+    if start < stop:
+        for __ in range(start, stop):
+            locals()[var] = __
+            if eval(cond, globals(), locals()):
+                yield __
+    else:
+        for __ in range(start, stop, -1):
+            locals()[var] = __
+            if eval(cond, globals(), locals()):
+                yield __     
+
+shared_dict["__experimental_range"] = __experimental_range
+
 
 no_condition = r"""(?P<indented_for>\s*for\s+)
                       (?P<var>[a-zA-Z_]\w*)  
