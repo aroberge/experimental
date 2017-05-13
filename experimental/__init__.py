@@ -28,7 +28,6 @@ start_console = console.start_console
 if "-m" in sys.argv:
     if len(sys.argv) > 1:
         for i in range(1, len(sys.argv)-1):
-            print("Should import ", sys.argv[i])
             transforms.import_transformer(sys.argv[i])
 
         main_module = import_hook.import_main(sys.argv[-1])

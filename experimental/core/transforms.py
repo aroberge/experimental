@@ -50,10 +50,10 @@ def import_transformer(name):
     try:
         transformers[name] = __import__(name)
     except ImportError:
-        sys.stderr.write("Warning: Import Error in add_transformers: %s not found" % name)
+        sys.stderr.write("Warning: Import Error in add_transformers: %s not found\n" % name)
         transformers[name] = NullTransformer()
     except Exception as e:
-        sys.stderr.write("Unexpected exception in transforms.import_transformer " +
+        sys.stderr.write("Unexpected exception in transforms.import_transformer%s\n " %
                          e.__class__.__name__)
     finally:
         sys.meta_path.insert(0, hook) # restore import hook
