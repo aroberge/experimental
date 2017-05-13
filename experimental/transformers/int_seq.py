@@ -1,4 +1,4 @@
-'''    from __experimental__ import alt_range
+'''    from __experimental__ import int_seq
 
 makes it possible to use an alternative syntax instead of using `range`
 in a for loop.  To be more specific, instead of

@@ -1,4 +1,4 @@
-from __experimental__ import alt_range
+from __experimental__ import int_seq
 
 
 def test_le_lt():
