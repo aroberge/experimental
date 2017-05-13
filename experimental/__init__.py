@@ -20,12 +20,9 @@ Possible invocations of this module:
 
 Note that a console is started in all cases except 4 above.
 '''
-import os
 import sys
 
 from .core import console, import_hook, transforms
-from .transformers import utils
-from utils.shared import shared_dict
 start_console = console.start_console
 
 if "-m" in sys.argv:
@@ -37,11 +34,12 @@ if "-m" in sys.argv:
         main_module = import_hook.import_main(sys.argv[-1])
 
         if sys.flags.interactive:
+            main_dict = {}
             for var in dir(main_module):
                 if var in ["__cached__", "__loader__",
                            "__package__", "__spec__"]:
                     continue
-                shared_dict[var] = getattr(main_module, var)
-            start_console(shared_dict)
+                main_dict[var] = getattr(main_module, var)
+            start_console(main_dict)
     else:
-        start_console(shared_dict)
+        start_console()

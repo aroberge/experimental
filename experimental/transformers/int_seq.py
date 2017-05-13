@@ -37,9 +37,8 @@ would print the first 4 even integers.
 The transformation is done using a regex search and is only valid
 on a single line.
 '''
-
+import builtins
 import re
-from utils.shared import shared_dict
 
 def __experimental_range(start, stop, var, cond, loc={}):
     locals().update(loc)
@@ -54,12 +53,11 @@ def __experimental_range(start, stop, var, cond, loc={}):
             if eval(cond, globals(), locals()):
                 yield __     
 
-shared_dict["__experimental_range"] = __experimental_range
-
+builtins.__experimental_range = __experimental_range
 
 no_condition = r"""(?P<indented_for>\s*for\s+)
                       (?P<var>[a-zA-Z_]\w*)  
-                      \s+ in \s+               
+                      \s+ (in|inseq) \s+               
                       (?P<start>[-\w]+)         
                       \s* %s \s*
                       (?P=var)
@@ -94,7 +92,7 @@ cases.append((gt_ge, "{0} {1} in range({2}-1, {3}-1, -1):"))
 
 with_condition = r"""(?P<indented_for>\s*for\s+)
                       (?P<var>[a-zA-Z_]\w*)  
-                      \s+ in \s+               
+                      \s+ (in|inseq) \s+               
                       (?P<start>[-\w]+)         
                       \s* %s \s*
                       (?P=var)

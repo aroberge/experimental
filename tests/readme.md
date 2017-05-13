@@ -58,12 +58,9 @@ To run all tests from the parent directory containing the tests folder, the foll
 
     python -m pytest tests
 
-Alternatively, from the tests directory, one can use
-
-    python -m pytest .
 
 ## Running a single test without pytest
 
-To run a single test file `test_X.py` without using pytest, we simply have to do
+To run a single test file `X_testfile.py` without using pytest, we simply have to do
 
-    python -m experimental path/to/test_X.py
+    python -m experimental path.to.X_testfile

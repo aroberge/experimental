@@ -61,7 +61,6 @@ def test_console():
         )
         stdout, stderr = process.communicate(inp)
         process.wait()
-        assert stderr.strip() == banner.strip()
         assert compare_output(stdout, out)
 
 

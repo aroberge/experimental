@@ -5,7 +5,6 @@ takes care of invoking all known transformers to convert a source code.
 '''
 import re
 import sys
-import traceback
 
 FROM_EXPERIMENTAL = re.compile("(^from\s+__experimental__\s+import\s+)")
 
@@ -54,7 +53,7 @@ def import_transformer(name):
         sys.stderr.write("Warning: Import Error in add_transformers: %s not found" % name)
         transformers[name] = NullTransformer()
     except Exception as e:
-        sys.stderr.write("Unexpected exception in transforms.import_transformer",
+        sys.stderr.write("Unexpected exception in transforms.import_transformer " +
                          e.__class__.__name__)
     finally:
         sys.meta_path.insert(0, hook) # restore import hook
@@ -106,9 +105,10 @@ def transform(source):
                 source = tr_module.transform_source(source)
             except Exception as e:
                 failed[name] = tr_module
+                # from traceback import print_exc
                 # print("Unexpected exception in transforms.transform",
                 #       e.__class__.__name__)
-                # traceback.print_exc()
+                # print_exc()
 
         if not failed:
             break
