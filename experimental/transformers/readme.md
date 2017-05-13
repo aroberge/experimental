@@ -113,6 +113,55 @@ as well. A more robust solution could always be implemented
 using the tokenize module.
 
 
+## int_seq.py 
+
+    from __experimental__ import int_seq
+
+makes it possible to use an alternative syntax instead of using `range`
+in a for loop.  To be more specific, instead of
+
+    for i in range(3):
+        print(i)
+
+we could write
+
+    for i in 0 <= i < 3:
+        print(i)
+
+or
+
+    for i in 0 <= i <= 2:
+        print(i)
+
+By reversing the order of the comparison operators, we iterate in reverse.
+Thus, for example
+
+    for i in 10 >= i > 0:
+        print(i)
+
+would be equivalent to
+
+    for i in range(10, 0, -1):
+        print(i)
+
+An additional condition can be added; for example
+
+    for i in 1 <= i < 10  if (i % 2 == 0):
+        print(i)
+
+would print the first 4 even integers.
+
+In addition, `inseq` is possible to use as a keyword instead of `in`.
+`inseq` is meant to mean `in sequence`. Also, the "range" can be enclosed
+in parentheses for greater clarity. Thus, the following is valid:
+
+    for i inseq (1 <= i < 10)  if (i % 2 == 0):
+        print(i)
+
+The transformation is done using a regex search and is only valid
+on a single line.
+
+
 ## nobreak_keyword.py 
 
     from __experimental__ import nobreak_keyword

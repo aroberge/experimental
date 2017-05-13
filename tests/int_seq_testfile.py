@@ -7,6 +7,11 @@ def test_le_lt():
         result.append(x)
     assert result == [2, 3, 4, 5, 6]
 
+def test_le_lt_paren():
+    result = []
+    for x in (2 <= x < 7):
+        result.append(x)
+    assert result == [2, 3, 4, 5, 6]
 
 def test_le_lt_cond():
     result = []
@@ -114,9 +119,16 @@ def test_gt_gt_cond():
         result.append(x)
     assert result == [10, 8, 6, 5]
 
+def test_gt_gt_cond_paren():
+    result = []
+    for x in( 10 >= x >= 5 )if x%2==0 or x==5:
+        result.append(x)
+    assert result == [10, 8, 6, 5]
+
 
 if __name__ == "__main__":
     test_le_lt()
+    test_le_lt_paren()
     test_le_lt_cond()
     test_le_le()
     test_le_le_cond()
@@ -132,4 +144,5 @@ if __name__ == "__main__":
     test_gt_ge_cond()
     test_gt_gt()
     test_gt_gt_cond()
+    test_gt_gt_cond_paren()
     print("Success.")

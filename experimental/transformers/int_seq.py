@@ -34,6 +34,13 @@ An additional condition can be added; for example
 
 would print the first 4 even integers.
 
+In addition, `inseq` is possible to use as a keyword instead of `in`.
+`inseq` is meant to mean `in sequence`. Also, the "range" can be enclosed
+in parentheses for greater clarity. Thus, the following is valid:
+
+    for i inseq (1 <= i < 10)  if (i % 2 == 0):
+        print(i)
+
 The transformation is done using a regex search and is only valid
 on a single line.
 '''
@@ -57,14 +64,20 @@ builtins.__experimental_range = __experimental_range
 
 no_condition = r"""(?P<indented_for>\s*for\s+)
                       (?P<var>[a-zA-Z_]\w*)  
-                      \s+ (in|inseq) \s+               
+                      \s+ (in|inseq) \s* 
+                      \(?\s*     # optional opening (
                       (?P<start>[-\w]+)         
                       \s* %s \s*
                       (?P=var)
                       \s* %s \s*
                       (?P<stop>[-\w]+)
+                      \s*\)?     # optional closing )
                       \s* : \s*
                       """
+# A problem with the optional () is that the regex will be
+# satisfied if only one of them is present. We'll take care of
+# this by ensuring an equal number of opening and closing parentheses.
+
 cases = []
 le_lt = re.compile(no_condition % ("<=", "<") , re.VERBOSE)
 cases.append((le_lt, "{0} {1} in range({2}, {3}):"))
@@ -92,13 +105,15 @@ cases.append((gt_ge, "{0} {1} in range({2}-1, {3}-1, -1):"))
 
 with_condition = r"""(?P<indented_for>\s*for\s+)
                       (?P<var>[a-zA-Z_]\w*)  
-                      \s+ (in|inseq) \s+               
+                      \s+ (in|inseq) \s*               
+                      \(?\s*     # optional opening (
                       (?P<start>[-\w]+)         
                       \s* %s \s*
                       (?P=var)
                       \s* %s \s*
                       (?P<stop>[-\w]+)
-                      \s+ if \s+
+                      \s*\)?     # optional closing )
+                      \s* if \s+
                       (?P<cond>.+)
                       \s* : \s*
                       """
@@ -134,7 +149,7 @@ def transform_source(source):
         begin = line.split("#")[0]
         for (pattern, for_str) in cases:
             result = pattern.search(begin)
-            if result is not None:
+            if result is not None and begin.count('(') == begin.count(')'):
                 line = create_for(for_str, result)
                 break
         new_lines.append(line)
