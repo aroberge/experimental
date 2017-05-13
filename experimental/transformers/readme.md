@@ -159,7 +159,8 @@ in parentheses for greater clarity. Thus, the following is valid:
         print(i)
 
 The transformation is done using a regex search and is only valid
-on a single line.
+on a single line. **There is no guarantee that all legitimately 
+valid cases will be recognized as such.**
 
 
 ## nobreak_keyword.py 

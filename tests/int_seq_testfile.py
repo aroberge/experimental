@@ -52,7 +52,7 @@ def test_lt_le_cond():
 
 def test_lt_lt():
     result = []
-    for x in 2 < x < 7:
+    for x inseq 2 < x < 7:
         result.append(x)
     assert result == [3, 4, 5, 6]
 
