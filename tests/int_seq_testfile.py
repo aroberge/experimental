@@ -3,7 +3,7 @@ from __experimental__ import int_seq
 
 def test_le_lt():
     result = []
-    for x in 2 <= x < 7:
+    for x in 2 <= x < 7:  # optional comment
         result.append(x)
     assert result == [2, 3, 4, 5, 6]
 
@@ -15,7 +15,7 @@ def test_le_lt_paren():
 
 def test_le_lt_cond():
     result = []
-    for x in 2 <= x < 7 if x % 2 == 0:
+    for x in 2 <= x < 7 if x % 2 == 0:#another comment
         result.append(x)
     assert result == [2, 4, 6]
 

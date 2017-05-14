@@ -11,7 +11,8 @@ Hello world!
 
 # What is `experimental`?
 
-`experimental` is a simple Python module intended to facilitate exploring different syntax construct in Python in an easy way.  Unless you have a very compelling and almost unimaginable reason to do so, **it should not be used in production**.
+`experimental` is a simple Python module intended to facilitate exploring different syntax construct in Python in an easy way.  Unless you have a very compelling and almost unimaginable reason to do so,
+:warning: **it should not be used in production**.
 
 Without `experimental`, if you want to modify Python's syntax, say by adding a new keyword, you need to:
 
@@ -22,7 +23,8 @@ Without `experimental`, if you want to modify Python's syntax, say by adding a n
 5. modify the compiler
 6. recompile all the sources
 
-This is a very involved process.  `experimental` is a Python module that provides a much simpler way to experiment with changes to Python's syntax.
+This is a very involved process.
+`experimental` is a Python module that provides a much simpler way to experiment with changes to Python's syntax.
 
 ## Installation
 
@@ -30,7 +32,7 @@ To install `experimental`, you can use the standard way:
 
     pip install experimental
 
-`experimental` currently requires Python 3.4+. 
+`experimental` currently requires Python 3.4+.
 
 ## Usage overview
 
@@ -141,7 +143,7 @@ This is definitely **not** Python.
 
 ### How does it work?
 
-`experimental` uses an import hook to replace the usual import mechanism. Normally, a Python file is first located, then its source is read and finally it is executed _as is_. With `experimental`, an extra step is inserted after the file is read so that its source code can be modified in memory prior to being executed. 
+`experimental` uses an import hook to replace the usual import mechanism. Normally, a Python file is first located, then its source is read and finally it is executed _as is_. With `experimental`, an extra step is inserted after the file is read so that its source code can be modified in memory prior to being executed.
 
 ### Available transformations
 
