@@ -130,7 +130,7 @@ we could write
 
 or
 
-    for i in 0 <= i <= 2:
+    for i in 0 <= i <= 2:   # compare upper boundary with previous case
         print(i)
 
 By reversing the order of the comparison operators, we iterate in reverse.
@@ -159,7 +159,7 @@ in parentheses for greater clarity. Thus, the following is valid:
         print(i)
 
 The transformation is done using a regex search and is only valid
-on a single line. **There is no guarantee that all legitimately 
+on a single line. **There is no guarantee that all legitimately
 valid cases will be recognized as such.**
 
 
@@ -230,7 +230,10 @@ only affect code and not content of strings.
 shows how one could use `where` as a keyword to introduce a code
 block that would be ignored by Python. The idea was to use this as
 a _pythonic_ notation as an alternative for the optional type hinting described
-in PEP484.  **This idea has been rejected.**
+in PEP484.  **This idea has been rejected** as it would not have
+been compatible with some older versions of Python, unlike the
+approach that has been accepted.
+https://www.python.org/dev/peps/pep-0484/#other-forms-of-new-syntax
 
 :warning: This transformation **cannot** be used in the console.
 
@@ -243,3 +246,5 @@ https://aroberge.blogspot.ca/2015/01/type-hinting-in-python-focus-on.html
 I first suggested this idea more than 12 years ago! ;-)
 
 https://aroberge.blogspot.ca/2005/01/where-keyword-and-python-as-pseudo.html
+
+

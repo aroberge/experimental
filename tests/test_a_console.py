@@ -59,7 +59,11 @@ def test_console():
             stderr=subprocess.PIPE,
             universal_newlines=True  # use strings as input
         )
-        stdout, stderr = process.communicate(inp)
+        # I have found comparisons with stderr problematic, so I ignore it
+        # However, since all tests are supposed not to raise exceptions
+        # but only valid output, this does not impact the reliability
+        # of these tests: if stdout is not as expected, we have a problem.
+        stdout, _ = process.communicate(inp)
         process.wait()
         assert compare_output(stdout, out)
 

@@ -151,6 +151,16 @@ See [the readme file in the transformers directory](https://github.com/aroberge/
 
 You are also more than welcome to submit your own experimental code transformations. I'm particularly interested to see new approaches used to transform source code. If you do so, you should include at least some minimal examples as test cases.
 
+### Limitation of the console
+
+Code transformations done in the console are performed on a "line by line" basis.
+As a result, transformations that work with an entire code block are likely to fail
+in the console.  An example is the `where_clause`
+If you create similar transformations, you might want to define a global
+variable `NO_CONSOLE` in your module, as was done in
+[where_clause](https://github.com/aroberge/experimental/blob/master/experimental/transformers/where_clause.py).
+
+
 ### Automated tests
 
 See [the readme file in the tests directory](https://github.com/aroberge/experimental/blob/master/tests/readme.md) for details.
@@ -158,7 +168,5 @@ See [the readme file in the tests directory](https://github.com/aroberge/experim
 
 ## To do
 
-- [ ] Add code transformation illustrating rejected PEP 315  (do while)
-
-- [ ] Add version based on `imp` for older Python versions.
+- Add version based on `imp` for older Python versions.
 
