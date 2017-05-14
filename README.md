@@ -158,8 +158,6 @@ See [the readme file in the tests directory](https://github.com/aroberge/experim
 
 ## To do
 
-- [ ] Add code/warning to remove code-block based transformations for console
-
 - [ ] Add code transformation illustrating rejected PEP 315  (do while)
 
 - [ ] Add version based on `imp` for older Python versions.

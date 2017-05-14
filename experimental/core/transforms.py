@@ -7,6 +7,7 @@ import re
 import sys
 
 FROM_EXPERIMENTAL = re.compile("(^from\s+__experimental__\s+import\s+)")
+CONSOLE_ACTIVE = False  # changed by console.start_console()
 
 class NullTransformer:
     '''NullTransformer is a convenience class which can generate instances
@@ -49,6 +50,14 @@ def import_transformer(name):
     sys.meta_path = sys.meta_path[1:]
     try:
         transformers[name] = __import__(name)
+        # Some transformers are not allowed in the console.
+        # If an attempt is made to activate one of them in the console,
+        # we replace it by a transformer that does nothing and print a
+        # message specific to that transformer as written in its module.
+        if CONSOLE_ACTIVE:
+            if hasattr(transformers[name], "NO_CONSOLE"):
+                print(transformers[name].NO_CONSOLE)
+                transformers[name] = NullTransformer()
     except ImportError:
         sys.stderr.write("Warning: Import Error in add_transformers: %s not found\n" % name)
         transformers[name] = NullTransformer()
@@ -79,6 +88,28 @@ def extract_transformers_from_source(source):
         del lines[number]
     return '\n'.join(lines)
 
+def remove_not_allowed_in_console():
+    '''This function should be called from the console, when it starts.
+
+    Some transformers are not allowed in the console and they could have
+    been loaded prior to the console being activated. We effectively remove them
+    and print an information message specific to that transformer
+    as written in the transformer module.
+
+    '''
+    not_allowed_in_console = []
+    if CONSOLE_ACTIVE:
+        for name in transformers:
+            tr_module = import_transformer(name)
+            if hasattr(tr_module, "NO_CONSOLE"):
+                not_allowed_in_console.append((name, tr_module))
+        for name, tr_module in not_allowed_in_console:
+            print(tr_module.NO_CONSOLE)
+            # Note: we do not remove them, so as to avoid seeing the
+            # information message displayed again if an attempt is
+            # made to re-import them from a console instruction.
+            transformers[name] = NullTransformer()
+
 
 def transform(source):
     '''Used to convert the source code, making use of known transformers.
@@ -96,6 +127,9 @@ def transform(source):
     '''
     source = extract_transformers_from_source(source)
 
+    # Some transformer fail when multiple non-Python constructs
+    # are present. So, we loop multiple times keeping track of
+    # which transformations have been unsuccessfully performed.
     not_done = transformers
     while True:
         failed = {}
@@ -112,6 +146,10 @@ def transform(source):
 
         if not failed:
             break
+        # Insanity is doing the same Tting over and overaAgain and
+        # expecting different results ...
+        # If the exact same set of transformations are not performed
+        # twice in a row, there is no point in trying out a third time.
         if failed == not_done:
             print("Warning: the following transforms could not be done:")
             for key in failed:

@@ -21,6 +21,8 @@ https://aroberge.blogspot.ca/2005/01/where-keyword-and-python-as-pseudo.html
 from io import StringIO
 import tokenize
 
+NO_CONSOLE = '\nWarning: where_clause is not allowed in the console.\n'
+
 def transform_source(text):
     '''removes a "where" clause which is identified by the use of "where"
     as an identifier and ends at the first DEDENT (i.e. decrease in indentation)'''

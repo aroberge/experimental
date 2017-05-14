@@ -11,7 +11,7 @@ from .. import version
 # define banner and prompt here so that they can be imported in tests
 banner = "experimental console version {}. [Python version: {}]\n".format(
             version.__version__, platform.python_version())
-prompt = "~~> "   
+prompt = "~~> "
 
 
 class ExperimentalInteractiveConsole(code.InteractiveConsole):
@@ -65,6 +65,8 @@ class ExperimentalInteractiveConsole(code.InteractiveConsole):
 
 def start_console(local_vars={}):
     '''Starts a console; modified from code.interact'''
+    transforms.CONSOLE_ACTIVE = True
+    transforms.remove_not_allowed_in_console()
     sys.ps1 = prompt
     console = ExperimentalInteractiveConsole(locals=local_vars)
     console.interact(banner=banner)
