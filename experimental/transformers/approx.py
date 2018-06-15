@@ -45,7 +45,7 @@ Here's the result of a quick demo
     0.30000000000000004                                                     
     ~~> 0.1 + 0.2 == 0.3                                                    
     False                                                                   
-    ~~> # Attempt to use approximate comparison with defining tolerances    
+    ~~> # Attempt to use approximate comparison without defining tolerances    
     ~~> 0.1 + 0.2 ~= 0.3                                                    
     Traceback (most recent call last):                                      
       File "<console>", line 1, in <module>                                 
