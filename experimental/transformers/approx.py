@@ -1,7 +1,15 @@
 '''
     from __experimental__ import approx
 
-defines some syntax for approximate comparisons within a certain tolerance.
+defines some syntax for approximate comparisons within a certain tolerance that
+must have been previously defined by two variables visible in the current scope:
+
+    rel_tol  # relative tolerance
+    abs_tol  # absolute tolerance
+
+These comparisons are done using `math.isclose()`; see this function's
+docstring to learn more about the value of the two parameters.
+
 The comparison operators are:
 
     ~=    # approximately equal
@@ -14,65 +22,66 @@ Given two mathematical terms or expressions a and b, they can occur:
     - immediately following an assert keyword
     - immediately following an if keyword
 
-However, in the current implementation, anything else will fail.  Thus
+However, in the current implementation, anything else will fail.  
 
+    abs_tol = rel_tol = 1e-8
     assert 0.1 + 0.2 ~= 0.3
 
 will work; however
 
+    abs_tol = rel_tol = 1e-8
     assert not 1 + 2 ~= 3
 
 will raise an AssertionError, because the `not` will not be parsed correctly.
 
-The implementation for the approximation is inspired from Numpy's isclose method
-https://docs.scipy.org/doc/numpy-1.14.0/reference/generated/numpy.isclose.html
-and uses both an absolute tolerance and a relative tolerance parameter
-(default value of 1.0e-8).  The values for these parameters can be changed using
-`set_tols`.
 
 Here's the result of a quick demo
 
-    > python -m experimental
-    experimental console version 0.9.5. [Python version: 3.6.1]
-
-    ~~> from __experimental__ import approx
-    ~~> 0.1 + 0.2
-    0.30000000000000004
-    ~~> 0.1 + 0.2 == 0.3   # standard equality test
-    False
-    ~~> 0.1 + 0.2 ~= 0.3   # approximate equality test
-    True
-    ~~> 2 ** 0.5
-    1.4142135623730951
-    ~~> set_tols(0.001, 0.001)
-    ~~> 2 ** 0.5  ~= 1.414
-    True
+    > python -m experimental                                                
+    experimental console version 0.9.6. [Python version: 3.6.1]             
+                                                                            
+    ~~> from __experimental__ import approx                                 
+    ~~> 0.1 + 0.2                                                           
+    0.30000000000000004                                                     
+    ~~> 0.1 + 0.2 == 0.3                                                    
+    False                                                                   
+    ~~> # Attempt to use approximate comparison with defining tolerances    
+    ~~> 0.1 + 0.2 ~= 0.3                                                    
+    Traceback (most recent call last):                                      
+      File "<console>", line 1, in <module>                                 
+    NameError: name 'rel_tol' is not defined                                
+    ~~> rel_tol = abs_tol = 1e-8                                            
+    ~~> 0.1 + 0.2 ~= 0.3                                                    
+    True                                                                    
+    ~~> 2**0.5 ~= 1.414                                                     
+    False                                                                   
+    ~~> abs_tol = 0.001                                                     
+    ~~> 2**0.5 ~= 1.414                                                     
+    True                                                                    
 '''
 
 import builtins
 
-def set_tols(atol, rtol):
-    builtins.__atol__ = atol 
-    builtins.__rtol__ = rtol 
-set_tols(1e-8, 1e-8)
+def approx_eq(a, b, rel_tol, abs_tol):
+    from math import isclose 
 
-def approx_eq(a, b):
-    '''Inspired by Numpy's isclose
-    https://docs.scipy.org/doc/numpy-1.14.0/reference/generated/numpy.isclose.html
-    '''
-    return abs(a - b) <= (builtins.__atol__ + builtins.__rtol__ * (abs(a) + abs(b)))
+    if abs_tol == rel_tol == 0:
+        print("approximate comparisons are implemented using math.isclose")
+        print("At least one of rel_tol or abs_tol must be defined either as a local or global variable.")
+        raise NotImplementedError
 
-def approx_le(a, b):
-    return (a < b) or approx_eq(a, b)
+    return isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)
 
-def approx_ge(a, b):
-    return (a > b) or approx_eq(a, b)
+def approx_le(a, b, rel_tol, abs_tol):
+    return (a < b) or approx_eq(a, b, rel_tol, abs_tol)
+
+def approx_ge(a, b, rel_tol, abs_tol):
+    return (a > b) or approx_eq(a, b, rel_tol, abs_tol)
 
 
 builtins.__approx_eq__ = approx_eq
 builtins.__approx_le__ = approx_le
 builtins.__approx_ge__ = approx_ge
-builtins.set_tols = set_tols 
 
 
 def transform_source(source):
@@ -124,17 +133,7 @@ def transform_line(line, operator):
         }
 
     new_line = (indent + keyword + functions[operator] +
-                "(" + lhs + "," + rhs + ")" + 
+                "(" + lhs + "," + rhs + ", rel_tol, abs_tol)" + 
                 separator + rest)
     return new_line
-
-if __name__ == '__main__':
-    print(transform_line('assert 0.1 + 0.2 ~= 0.3', '~='))
-    print(transform_line('    assert 0.1 + 0.2 ~= 0.3', '~='))
-    test_code = '''
-def test_approx():
-    assert 0.1 + 0.2 ~= 0.3, "0.1 + 0.2 is approximately equal to 0.3"
-    assert 0.1 + 0.2 ~= 0.3 # no message, but comments
-    '''
-    print(transform_source(test_code))
 
