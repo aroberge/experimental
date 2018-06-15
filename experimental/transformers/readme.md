@@ -10,31 +10,57 @@ from __experimental__ import function_keyword
 ```
 
 
-## where_clause.py 
-
-    from __experimental__ import where_clause
-
-shows how one could use `where` as a keyword to introduce a code
-block that would be ignored by Python. The idea was to use this as
-a _pythonic_ notation as an alternative for the optional type hinting described
-in PEP484.  **This idea has been rejected** as it would not have
-been compatible with some older versions of Python, unlike the
-approach that has been accepted.
-https://www.python.org/dev/peps/pep-0484/#other-forms-of-new-syntax
-
-:warning: This transformation **cannot** be used in the console.
-
-For more details, please see two of my recent blog posts:
-
-https://aroberge.blogspot.ca/2015/12/revisiting-old-friend-yet-again.html
-
-https://aroberge.blogspot.ca/2015/01/type-hinting-in-python-focus-on.html
-
-I first suggested this idea more than 12 years ago! ;-)
-
-https://aroberge.blogspot.ca/2005/01/where-keyword-and-python-as-pseudo.html
+## approx.py 
 
 
+    from __experimental__ import approx
+
+defines some syntax for approximate comparisons within a certain tolerance.
+The comparison operators are:
+
+    ~=    # approximately equal
+    <~=   # less than or approximately equal
+    >~=   # greater than or approximately equal
+
+Given two mathematical terms or expressions a and b, they can occur:
+
+    - on a single line
+    - immediately following an assert keyword
+    - immediately following an if keyword
+
+However, in the current implementation, anything else will fail.  Thus
+
+    assert 0.1 + 0.2 ~= 0.3
+
+will work; however
+
+    assert not 1 + 2 ~= 3
+
+will raise an AssertionError, because the `not` will not be parsed correctly.
+
+The implementation for the approximation is inspired from Numpy's isclose method
+https://docs.scipy.org/doc/numpy-1.14.0/reference/generated/numpy.isclose.html
+and uses both an absolute tolerance and a relative tolerance parameter
+(default value of 1.0e-8).  The values for these parameters can be changed using
+`set_tols`.
+
+Here's the result of a quick demo
+
+    > python -m experimental
+    experimental console version 0.9.5. [Python version: 3.6.1]
+
+    ~~> from __experimental__ import approx
+    ~~> 0.1 + 0.2
+    0.30000000000000004
+    ~~> 0.1 + 0.2 == 0.3   # standard equality test
+    False
+    ~~> 0.1 + 0.2 ~= 0.3   # approximate equality test
+    True
+    ~~> 2 ** 0.5
+    1.4142135623730951
+    ~~> set_tols(0.001, 0.001)
+    ~~> 2 ** 0.5  ~= 1.414
+    True
 
 
 ## convert_py2.py 
@@ -117,39 +143,6 @@ The transformation is done using the tokenize module; it should
 only affect code and not content of strings.
 
 
-## pep542.py 
-
-    from __experimental__ import pep542
-
-Trying to implement https://www.python.org/dev/peps/pep-0542/
-
-
-## repeat_keyword.py 
-
-    from __experimental__ import repeat_keyword
-
-introduces `repeat` as a keyword to write simple loops that repeat
-a set number of times.  That is:
-
-    repeat 3:
-        a = 2
-        repeat a*a:
-            pass
-
-is equivalent to
-
-    for __VAR_1 in range(3):
-        a = 2
-        for __VAR_2 in range(a*a):
-            pass
-
-The names of the variables are chosen so as to ensure that they
-do not appear in the source code to be translated.
-
-The transformation is done using the tokenize module; it should
-only affect code and not content of strings.
-
-
 ## increment.py 
 
 
@@ -171,66 +164,6 @@ This change is done as a simple string replacement, on a line by line basis.
 Therefore, it can change not only code but content of triple quoted strings
 as well. A more robust solution could always be implemented
 using the tokenize module.
-
-
-## spanish_syntax.py 
-
-    from __experimental__ import spanish_syntax
-
-allows the use of a predefined subset of Python keyword to be written
-as their Spanish equivalent; **English and Spanish keywords can be mixed**.
-
-    Neutral latin-american Spanish 
-        - translation by Sebastian Silva <sebastian at fuentelibre.org>
-
-Thus, code like:
-
-    si Verdadero:
-        imprime("Spanish can be used.")
-    sino:
-        print(Falso)
-
-Will be translated to
-
-    if True:
-        print("Spanish can be used.")
-    else:
-        print(False)
-
-This type of transformation could be useful when teaching the
-very basic concepts of programming to (young) beginners who use
-non-ascii based language and would find it difficult to type
-ascii characters.
-
-The transformation is done using the tokenize module; it should
-only affect code and not content of strings.
-
-
-## nobreak_keyword.py 
-
-    from __experimental__ import nobreak_keyword
-
-enables to use the fake keyword `nobreak` instead of `else`, as in
-
-    for i in range(3):
-        print(i)
-    nobreak:
-        print("The entire loop was run.")
-
-Note that `nobreak` can be use everywhere `else` could be used,
-(including in `if` blocks) even if would not make sense.
-
-The transformation is done using the tokenize module; it should
-only affect code and not content of strings.
-
-
-## print_keyword.py 
-
-    from __experimental__ import print_keyword
-
-triggers the use of the lib2to3 Python library to automatically convert
-all `print` statements (assumed to use the Python 2 syntax) into
-function calls.
 
 
 ## int_seq.py 
@@ -281,3 +214,123 @@ in parentheses for greater clarity. Thus, the following is valid:
 The transformation is done using a regex search and is only valid
 on a single line. **There is no guarantee that all legitimately
 valid cases will be recognized as such.**
+
+
+## nobreak_keyword.py 
+
+    from __experimental__ import nobreak_keyword
+
+enables to use the fake keyword `nobreak` instead of `else`, as in
+
+    for i in range(3):
+        print(i)
+    nobreak:
+        print("The entire loop was run.")
+
+Note that `nobreak` can be use everywhere `else` could be used,
+(including in `if` blocks) even if would not make sense.
+
+The transformation is done using the tokenize module; it should
+only affect code and not content of strings.
+
+
+## pep542.py 
+
+    from __experimental__ import pep542
+
+Trying to implement https://www.python.org/dev/peps/pep-0542/
+
+
+## print_keyword.py 
+
+    from __experimental__ import print_keyword
+
+triggers the use of the lib2to3 Python library to automatically convert
+all `print` statements (assumed to use the Python 2 syntax) into
+function calls.
+
+
+## repeat_keyword.py 
+
+    from __experimental__ import repeat_keyword
+
+introduces `repeat` as a keyword to write simple loops that repeat
+a set number of times.  That is:
+
+    repeat 3:
+        a = 2
+        repeat a*a:
+            pass
+
+is equivalent to
+
+    for __VAR_1 in range(3):
+        a = 2
+        for __VAR_2 in range(a*a):
+            pass
+
+The names of the variables are chosen so as to ensure that they
+do not appear in the source code to be translated.
+
+The transformation is done using the tokenize module; it should
+only affect code and not content of strings.
+
+
+## spanish_syntax.py 
+
+    from __experimental__ import spanish_syntax
+
+allows the use of a predefined subset of Python keyword to be written
+as their Spanish equivalent; **English and Spanish keywords can be mixed**.
+
+    Neutral latin-american Spanish 
+        - translation by Sebastian Silva <sebastian at fuentelibre.org>
+
+Thus, code like:
+
+    si Verdadero:
+        imprime("Spanish can be used.")
+    sino:
+        print(Falso)
+
+Will be translated to
+
+    if True:
+        print("Spanish can be used.")
+    else:
+        print(False)
+
+This type of transformation could be useful when teaching the
+very basic concepts of programming to (young) beginners who use
+non-ascii based language and would find it difficult to type
+ascii characters.
+
+The transformation is done using the tokenize module; it should
+only affect code and not content of strings.
+
+
+## where_clause.py 
+
+    from __experimental__ import where_clause
+
+shows how one could use `where` as a keyword to introduce a code
+block that would be ignored by Python. The idea was to use this as
+a _pythonic_ notation as an alternative for the optional type hinting described
+in PEP484.  **This idea has been rejected** as it would not have
+been compatible with some older versions of Python, unlike the
+approach that has been accepted.
+https://www.python.org/dev/peps/pep-0484/#other-forms-of-new-syntax
+
+:warning: This transformation **cannot** be used in the console.
+
+For more details, please see two of my recent blog posts:
+
+https://aroberge.blogspot.ca/2015/12/revisiting-old-friend-yet-again.html
+
+https://aroberge.blogspot.ca/2015/01/type-hinting-in-python-focus-on.html
+
+I first suggested this idea more than 12 years ago! ;-)
+
+https://aroberge.blogspot.ca/2005/01/where-keyword-and-python-as-pseudo.html
+
+
