@@ -12,33 +12,49 @@ into
     other+= 1
 
 Space(s) betwen `name` and `++` are ignored.
-
-This change is done as a simple string replacement, on a line by line basis.
-Therefore, it can change not only code but content of triple quoted strings
-as well. A more robust solution could always be implemented
-using the tokenize module.
 '''
 
-def transform_source(src):
-    newlines = []
-    for line in src.splitlines():
-        if ('++') in line:
-            newlines.append(transform_line(line))
-        else:
-            newlines.append(line)
-    result = '\n'.join(newlines)
-    return result
+from io import StringIO
+import tokenize
 
-def transform_line(line):
-    original = line
-    try:
-        first, second = line.split("#")[0].split('++')
-    except ValueError:
-        return original
-    # if line is of the form
-    # ...identifier...++...
-    # where "..." represent optional spaces
-    if first.strip().isidentifier() and second.strip() == '':
-        return original.replace("++", "+= 1")
-    else:
-        return original
+
+def transform_source(src):
+    toks = tokenize.generate_tokens(StringIO(src).readline)
+    result = []
+    last_name = None
+    last_plus = False
+    for toktype, tokvalue, _, _, _ in toks:
+        if toktype == tokenize.NAME:
+            if last_name is not None:  # two names in a row: not an increment
+                result.append((tokenize.NAME, last_name))
+                result.append((tokenize.NAME, tokvalue))
+                last_name = None
+            else:
+                last_name = tokvalue
+        elif last_name is not None:
+            if toktype == tokenize.OP and tokvalue == '+':
+                if last_plus:
+                    result.extend([
+                        (tokenize.NAME, last_name),
+                        (tokenize.OP, '='),
+                        (tokenize.NAME, last_name),
+                        (tokenize.OP, '+'),
+                        (tokenize.NUMBER, '1')
+                    ])
+                    last_plus = False
+                    last_name = None
+                else:
+                    last_plus = True
+            else:
+                result.append((tokenize.NAME, last_name))
+                if last_plus:
+                    result.append((tokenize.OP, '+'))
+                    last_plus = False
+                result.append((toktype, tokvalue))
+                last_name = None
+        else:
+            result.append((toktype, tokvalue))
+
+    if last_name:
+        result.append((tokenize.NAME, last_name))
+    return tokenize.untokenize(result)
