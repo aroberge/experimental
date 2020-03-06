@@ -1,3 +1,7 @@
+# Warning
+
+:warning: This project is kept for historical reason but it has rendered obsolete by the creation of [ideas](https://github.com/aroberge/ideas).
+
 
 ### A bit of nostalgia
 ```python
